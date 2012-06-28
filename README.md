@@ -12,7 +12,9 @@ Automatically generate Clojure function proxies for java.lang.Math static method
 
 ## Thanks
 
-Thanks to Patrick Brown for the idea, and to the Durham Clojure class for their assistance.
+Thanks to Patrick Brown for the idea, Jon Distad for pairing with me
+on the initial implementation, and to the Durham Clojure Roadshow
+class for their participation.
 
 ## License
 
