@@ -8,7 +8,7 @@
   exclusions #{"min" "max"})
 
 (defn- methods-in
-  "Returns a map of method names to Methods implemented in klass."
+  "Returns Methods implemented in klass."
   [klass]
   (filter (comp #{klass} #(.getDeclaringClass %)) (.getMethods klass)))
 
@@ -24,6 +24,7 @@
           methods))
 
 (defn- clojurize
+  "Converts camelCase to clojure-case."
   [s]
   (->> s
     (re-seq #"(?:[A-Z][a-z]+|[A-Z]+|[a-z]+)")
