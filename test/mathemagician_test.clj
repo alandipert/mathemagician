@@ -9,5 +9,5 @@
 (deftest testing-clojurize
   (testing "that the way we munge camelcase is correct"
     (is (= "next-thing-blah" (@#'mathemagician/clojurize "nextThingBlah")))
-    ;; FIXME: the following fails and needs to be fixed
-    (is (= "ieee-remainder" (@#'mathemagician/clojurize "IEEEremainder")))))
+    (is (= "ieee-remainder" (@#'mathemagician/clojurize "IEEEremainder")))
+    (is (= "another-ieee-remainder" (@#'mathemagician/clojurize "anotherIEEEremainder")))))

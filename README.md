@@ -2,6 +2,8 @@
 
 Automatically generate Clojure function proxies for java.lang.Math static methods.
 
+[![Build Status](https://secure.travis-ci.org/alandipert/mathemagician.png?branch=master)](http://travis-ci.org/alandipert/mathemagician)
+
 ## Usage
 
 ```clojure
