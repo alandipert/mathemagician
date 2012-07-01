@@ -50,12 +50,3 @@
   (eval (cons 'do (fn-impls exclusions klass))))
 
 (install-fns Math)
-
-;;; Before:
-;;; (Math/abs -4) ;=> 4
-;;; (Math/floor 2.3) ;=> 2.0
-
-;;; Now:
-;;; (use 'automath)
-;;; (abs -4) ;=> 4
-;;; (floor 2.3) ;=> 2.0
