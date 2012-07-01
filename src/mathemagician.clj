@@ -1,7 +1,7 @@
 (ns mathemagician
   "Namespace of functions that are proxies for methods on
    java.lang.Math for maximum developer convenience."
-  (:use [clojure.string :only (lower-case)]))
+  (:use [clojure.string :only (lower-case join)]))
 
 (def ^{:private true
        :doc "Set of method names not to generate a proxy function for."}
@@ -26,9 +26,9 @@
 (defn- clojurize
   [s]
   (->> s
-       (map #(if (Character/isUpperCase %) (str "-" %) %))
-       (apply str)
-       lower-case))
+    (re-seq #"(?:[A-Z][a-z]+|[A-Z]+|[a-z]+)")
+    (join "-")
+    lower-case))
 
 (defn- fn-impls
   "Returns a list of function implementations corresponding to all
