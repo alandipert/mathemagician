@@ -15,11 +15,13 @@
      ~@tests))
 
 (with-private-vars [mathemagician [clojure-case fn-impls]]
+
   (deftest testing-clojure-case
     (testing "that the way we munge camelcase is correct"
-      (is (= "next-thing-blah" (clojure-case "nextThingBlah")))
-      (is (= "ieee-remainder" (clojure-case "IEEEremainder")))
-      (is (= "another-ieee-remainder" (clojure-case "anotherIEEEremainder")))))
+      (are [clj java] (= clj (clojure-case java))
+           "next-thing-blah" "nextThingBlah"
+           "ieee-remainder" "IEEEremainder"
+           "another-ieee-remainder" "anotherIEEEremainder")))
 
   (deftest testing-fn-impls
     (testing "a function implementation is included"
