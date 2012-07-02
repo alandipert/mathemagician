@@ -6,14 +6,17 @@ Automatically generate Clojure function proxies for [java.lang.Math](http://docs
 
 ## Usage
 
-Add this to your `project.clj`:
+Add this to your `project.clj` if you're using [Leiningen](https://github.com/technomancy/leiningen/):
 
 ```clojure
 [alandipert/mathemagician "0.0.1"]
 ```
 
+Then, in the namespace you want math functions in:
+
 ```clojure
-(use 'mathemagician)
+(ns your-ns
+  (:use [mathemagician :only (abs)]))
 
 (abs -3) ;=> 3
 ```
