@@ -8,11 +8,11 @@
     (is (= 3 (abs -3)))
     (is (= 9.0 (pow 3 2)))))
 
-(deftest testing-clojurize
+(deftest testing-clojure-case
   (testing "that the way we munge camelcase is correct"
-    (is (= "next-thing-blah" (@#'mathemagician/clojurize "nextThingBlah")))
-    (is (= "ieee-remainder" (@#'mathemagician/clojurize "IEEEremainder")))
-    (is (= "another-ieee-remainder" (@#'mathemagician/clojurize "anotherIEEEremainder")))))
+    (is (= "next-thing-blah" (@#'mathemagician/clojure-case "nextThingBlah")))
+    (is (= "ieee-remainder" (@#'mathemagician/clojure-case "IEEEremainder")))
+    (is (= "another-ieee-remainder" (@#'mathemagician/clojure-case "anotherIEEEremainder")))))
 
 (deftest testing-fn-impls
   (testing "a function implementation is included"

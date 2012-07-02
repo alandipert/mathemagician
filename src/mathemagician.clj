@@ -23,13 +23,21 @@
           {}
           methods))
 
-(defn- clojurize
+(defn- clojure-case
   "Converts camelCase to clojure-case."
   [s]
   (->> s
     (re-seq #"(?:[A-Z][a-z]+|[A-Z]+|[a-z]+)")
     (join "-")
     lower-case))
+
+(defn- gendefn
+  "Returns a defn as data with the clojure-case name and arities that
+  calls through to the camelCase method of klass."
+  [klass name arities]
+  (let [argvs (map #(vec (take % (repeatedly gensym))) arities)]
+    `(defn ~(symbol (clojure-case name))
+       ~@(map #(list % (list* '. klass (symbol name) %)) argvs))))
 
 (defn- fn-impls
   "Returns a list of function implementations corresponding to all
@@ -38,11 +46,7 @@
   [exclude-names klass]
   (for [[name arities] (names-arities (methods-in klass))
         :when (not (exclude-names name))]
-    (let [args (map #(vec (take % (repeatedly gensym))) arities)
-          clj-name (clojurize name)]
-      `(defn ~(symbol clj-name)
-         ~@(map (fn [argv] (list argv (list* '. klass (symbol name) argv)))
-                args)))))
+    (gendefn klass name arities)))
 
 (defn- install-fns
   "Generates proxy functions for klass and installs them in this namespace."
