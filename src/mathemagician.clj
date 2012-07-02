@@ -12,14 +12,16 @@
   [klass]
   (filter (comp #{klass} #(.getDeclaringClass %)) (.getMethods klass)))
 
-(defn- names-arities
-  "Given a collection of methods, returns a map of method names to sets of arities."
+(defn- names-sigs
+  "Given a collection of methods, returns a map of method names to vectors of signatures."
   [methods]
   (reduce (fn [sigs meth]
             (update-in sigs
                        [(.getName meth)]
                        (fnil conj #{})
-                       (count (.getParameterTypes meth))))
+                       (->> meth
+                            .getParameterTypes
+                            (map (comp symbol #(.getName %))))))
           {}
           methods))
 
@@ -31,22 +33,36 @@
     (join "-")
     lower-case))
 
-(defn- gendefn
-  "Returns a defn as data with the clojure-case name and arities that
-  calls through to the camelCase method of klass."
-  [klass name arities]
-  (let [argvs (map #(vec (take % (repeatedly gensym))) arities)]
-    `(defn ~(symbol (clojure-case name))
-       ~@(map #(list % (list* '. klass (symbol name) %)) argvs))))
+(defn- genmulti [klass mname sigs]
+  (let [msym (symbol mname)
+        fname (symbol (clojure-case mname))
+        ;; TODO: handle mixed signatures with one or more supported primitives
+        primitive-sigs (filter #(every? '#{long double} %) sigs)
+        arities (set (map count sigs))
+        multi `(defmulti ~fname #(map class %&))
+        methods (for [sig primitive-sigs
+                      :let [argv (mapv #(with-meta (gensym) {:tag %}) sig)
+                            args (map #(vary-meta % dissoc :tag) argv)]]
+                  `(defmethod ~fname
+                     ~(mapv {'double Double 'long Long} sig)
+                     ~argv
+                     ~`(. ~klass ~msym ~@args)))
+        default `(defmethod ~fname
+                   :default
+                   ~@(map #(let [argv (vec (take % (repeatedly gensym)))]
+                             `(~argv
+                               ~`(. ~klass ~msym ~@argv)))
+                          arities))]
+    `(do ~multi ~@methods ~default)))
 
 (defn- fn-impls
   "Returns a list of function implementations corresponding to all
   methods and their arities on klass, excluding any methods in
   exclude-names."
   [exclude-names klass]
-  (for [[name arities] (names-arities (methods-in klass))
+  (for [[name sigs] (names-sigs (methods-in klass))
         :when (not (exclude-names name))]
-    (gendefn klass name arities)))
+    (genmulti klass name sigs)))
 
 (defn- install-fns
   "Generates proxy functions for klass and installs them in this namespace."

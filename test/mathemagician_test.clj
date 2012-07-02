@@ -15,21 +15,21 @@
      ~@tests))
 
 (with-private-vars [mathemagician [clojure-case fn-impls]]
-
+  
   (deftest testing-clojure-case
     (testing "that the way we munge camelcase is correct"
       (are [clj java] (= clj (clojure-case java))
            "next-thing-blah" "nextThingBlah"
            "ieee-remainder" "IEEEremainder"
            "another-ieee-remainder" "anotherIEEEremainder")))
-
+  
   (deftest testing-fn-impls
     (testing "a function implementation is included"
       (is (some
            #{'cos}
-           (->> (fn-impls #{"random"} Math) (map second)))))
+           (->> (fn-impls #{"random"} Math) (map (comp second second))))))
     (testing "a function implementation is excluded"
       (is (nil?
            (some
             #{'random}
-            (->> (fn-impls #{"random"} Math) (map second))))))))
+            (->> (fn-impls #{"random"} Math) (map (comp second second)))))))))
