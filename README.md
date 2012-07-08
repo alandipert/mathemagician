@@ -9,7 +9,7 @@ Automatically generate Clojure function proxies for [java.lang.Math](http://docs
 Add this to your `project.clj` if you're using [Leiningen](https://github.com/technomancy/leiningen/):
 
 ```clojure
-[alandipert/mathemagician "0.0.1"]
+[alandipert/mathemagician "0.0.2"]
 ```
 
 Then, in the namespace you want math functions in:
