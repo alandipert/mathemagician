@@ -21,6 +21,15 @@ Then, in the namespace you want math functions in:
 (abs -3) ;=> 3
 ```
 
+## Performance
+
+Effort has been made to make the functions that `mathemagician`
+generates fast, but they're still about 5x slower than direct calls to
+`Math` methods.
+
+If you need better performance, you can substitute your
+`mathemagician` function calls for Math method calls.
+
 ## Thanks
 
 Thanks to [Patrick Brown](https://github.com/patbrown) for the idea,
