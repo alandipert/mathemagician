@@ -1,7 +1,7 @@
 (ns mathemagician
   "Namespace of functions that are proxies for methods on
    java.lang.Math for maximum developer convenience."
-  (:use [clojure.string :only (lower-case join)]))
+  (:use [clojure.string :only (lower-case replace)]))
 
 (def ^{:private true
        :doc "Set of method names not to generate a proxy function for."}
@@ -28,10 +28,9 @@
 (defn- clojure-case
   "Converts camelCase to clojure-case."
   [s]
-  (->> s
-    (re-seq #"(?:[A-Z][a-z]+|[A-Z]+|[a-z]+)")
-    (join "-")
-    lower-case))
+  (-> s
+      lower-case
+      (str/replace #"([a-zA-Z])(?=[A-Z])" "$1-")))
 
 (defn- genmulti [klass mname sigs]
   (let [msym (symbol mname)
